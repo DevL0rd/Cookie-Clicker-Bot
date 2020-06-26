@@ -1,4 +1,4 @@
-var buyAheadBase = 4500;
+var buyAheadBase = 4300;
 
 // Pre-req functions
 function multiplyBy(x, y, n) {
@@ -87,7 +87,6 @@ function clickDahUpgrade() {
             if (activeProds && activeProds.length) { // buy it number of prods avail hits buyLength of buyable things.
                 $selectedProduct = activeProds[activeProds.length - 1]; //get to greatest product.
             }
-
         }
     }
 
@@ -118,7 +117,7 @@ function updateBuyRate() {
     var prods = _$("#products").getElementsByClassName("unlocked");
     var prodName = prods[prods.length - 1].getElementsByClassName("title")[0].innerHTML;
     if (prodName == "Prism") {
-        buyAheadMaxTime = multiplyBy(buyAheadBase, 2, 10);
+        buyAheadMaxTime = multiplyBy(buyAheadBase, 1.9, 10);
     } else if (prodName == "Antimatter condenser") {
         buyAheadMaxTime = multiplyBy(buyAheadBase, 2, 9);
     } else if (prodName == "Time machine") {
@@ -144,7 +143,7 @@ function updateBuyRate() {
 
 var clickCookieInterval;
 var clickUpgradesInterval;
-function start() { clickCookieInterval = setInterval(clickDahCookie, 1); clickUpgradesInterval = setInterval(clickDahUpgrade, 50); return true; }
+function start() { clickCookieInterval = setInterval(clickDahCookie, 1); clickUpgradesInterval = setInterval(clickDahUpgrade, 20); return true; }
 function stop() { clearInterval(clickCookieInterval); clearInterval(clickUpgradesInterval); return true; }
 stop();
 start();

@@ -24,6 +24,7 @@ function clickDahCookie() {
         mousClicksPerSecond = cpsTracker;
         cpsTracker = 0;
         updateBuyRate();
+        Game.PopRandomWrinkler();
     }
 }
 
@@ -47,7 +48,10 @@ function clickDahUpgrade() {
         return
     }
     if (_$(".shimmer")) {
-        _$(".shimmer").click();
+        if (!/wrath/.test(_$(".shimmer").style.background)) {
+            _$(".shimmer").click();
+            _$("#seasonPopup").click();
+        }
         console.log("Clicked golden cookie.");
     }
     var lumpsAmount = Number.parseInt(_$("#lumpsAmount").innerHTML)
@@ -83,6 +87,7 @@ function clickDahUpgrade() {
             if (activeProds && activeProds.length) { // buy it number of prods avail hits buyLength of buyable things.
                 $selectedProduct = activeProds[activeProds.length - 1]; //get to greatest product.
             }
+
         }
     }
 
@@ -139,7 +144,7 @@ function updateBuyRate() {
 
 var clickCookieInterval;
 var clickUpgradesInterval;
-function start() { clickCookieInterval = setInterval(clickDahCookie, 1); clickUpgradesInterval = setInterval(clickDahUpgrade, 10); return true; }
+function start() { clickCookieInterval = setInterval(clickDahCookie, 1); clickUpgradesInterval = setInterval(clickDahUpgrade, 50); return true; }
 function stop() { clearInterval(clickCookieInterval); clearInterval(clickUpgradesInterval); return true; }
 stop();
 start();

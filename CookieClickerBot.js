@@ -36,7 +36,7 @@ function clickDahUpgrade() {
     var upgrds = _$("#upgrades").getElementsByClassName("enabled");
     for (upgrd of upgrds) {
         upgrd.click();
-        _$("#promptOption0").click();
+        // _$("#promptOption0").click();
         console.log("Purchased upgrade.");
         return
     }

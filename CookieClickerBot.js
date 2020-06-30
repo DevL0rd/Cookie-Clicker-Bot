@@ -21,9 +21,8 @@ function clickDahCookie() {
         cpsEnd = now + 1000;
         mousClicksPerSecond = cpsTracker;
         cpsTracker = 0;
-        //updateBuyRate();
+        updateBuyRate();
         Game.PopRandomWrinkler();
-        _$("#gardenSoilIcon-4").click()
     }
 }
 
@@ -117,19 +116,21 @@ function clickDahUpgrade() {
 
 
     var $worstProd = getWorstProduct();
-    var canBuy = getCanBuyAmmount($worstProd);
-    console.log(canBuy)
     var $prod;
     if (buyAllMode) {
         $prod = getBestActiveProduct();
-        if (canBuy < 2) {
+        if (!$prod) {
             buyAllMode = false;
+            console.log("Resuming normal bot function.");
         }
     } else {
-        if (canBuy > 150) {
+        var canBuy = getCanBuyAmmount($worstProd);
+        if (canBuy > 200) {
             buyAllMode = true;
+            console.log("Buying up all products to even growth.");
         }
         $prod = getProductInWaitRange();
+
     }
 
 
@@ -161,11 +162,11 @@ var lastBestProd;
 function updateBuyRate() {
     var prods = _$("#products").getElementsByClassName("unlocked");
     var prod = prods[prods.length - 1];
-    buyAheadMaxTime = getProductWaitForNextTime(prod);
     if (lastBestProd != prod) {
         var prodName = getProductName(prod);
         console.log("Unlocked product '" + prodName + "'. Max wait time '" + (buyAheadMaxTime / 1000) + " S'");
         lastBestProd = prod;
+        buyAheadMaxTime = getProductWaitForNextTime(prod);
     }
 }
 function getProductName(prod) {
@@ -201,7 +202,7 @@ function playGardenGame() {
 
 var clickCookieInterval;
 var clickUpgradesInterval;
-function start() { clickCookieInterval = setInterval(clickDahCookie, 1); clickUpgradesInterval = setInterval(clickDahUpgrade, 20); return true; }
+function start() { clickCookieInterval = setInterval(clickDahCookie, 1); clickUpgradesInterval = setInterval(clickDahUpgrade, 10); return true; }
 function stop() { clearInterval(clickCookieInterval); clearInterval(clickUpgradesInterval); return true; }
 stop();
 start();

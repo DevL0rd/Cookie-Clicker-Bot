@@ -1,4 +1,5 @@
 var buyAheadBase = 120000; //2 Minutes max time, probably gets better to wait longer though, as long as there are buyout rules for ex
+var buyAheadMaxTime = 30000;
 // Pre-req functions
 function multiplyBy(x, y, n) {
     var tot = x * y;
@@ -9,7 +10,6 @@ function multiplyBy(x, y, n) {
 };
 
 var _$ = $;
-var buyAheadMaxTime = 5000;
 var mousClicksPerSecond = 0;
 var cpsTracker = 0;
 var cpsEnd = (new Date()).getTime() + 1000;
@@ -21,15 +21,13 @@ function clickDahCookie() {
         cpsEnd = now + 1000;
         mousClicksPerSecond = cpsTracker;
         cpsTracker = 0;
-        updateBuyRate();
+        //updateBuyRate();
         Game.PopRandomWrinkler();
+        _$("#gardenSoilIcon-4").click()
     }
 }
 
 var upgradePaused = false;
-var $targetProduct;
-var targetProductTimeNeeded = 1;
-var $lastSelectedProduct;
 var buyAllMode = false;
 
 function buyUpgrades() {
@@ -58,100 +56,147 @@ function clickaShimmer() {
         console.log("Clicked shimmer.");
     }
 }
+
+function getTimeToBuyable(prod) {
+    var prodName = getProductName(prod);
+    var cookies = Game.cookies;
+    var price = Game.Objects[prodName].getPrice();
+    var cookiesNeeded = price - cookies;
+    var cookiesPs = Game.cookiesPs + mousClicksPerSecond;
+    return Math.floor(((cookiesNeeded / cookiesPs) * 1000));
+}
+function getWorstProduct() {
+    var prods = _$("#products").getElementsByClassName("unlocked");
+    $prod = prods[0]; //get to greatest product.
+    $prod.timeNeeded = 0;
+    return $prod;
+    return false
+}
+function getBestActiveProduct() {
+    var enabledProds = _$("#products").getElementsByClassName("enabled");
+    if (enabledProds && enabledProds.length) { // buy it number of prods avail hits buyLength of buyable things.
+        $prod = enabledProds[enabledProds.length - 1]; //get to greatest product.
+        if ($prod) $prod.timeNeeded = 0;
+        return $prod;
+    }
+    return false
+}
+function getProductInWaitRange() {
+    var prods = _$("#products").getElementsByClassName("unlocked");
+    for (var i = prods.length - 1; i > -1; i--) {
+        var $prod = prods[i];
+        var timeNeeded = getTimeToBuyable($prod);
+        if (timeNeeded < buyAheadMaxTime) {
+            $prod.timeNeeded = timeNeeded;
+            return $prod;
+        }
+    }
+    return false;
+}
+function resetProdBorders() {
+    var prods = _$("#products").getElementsByClassName("unlocked");
+    for ($prod of prods) {
+        $prod.style = "border: none;";
+    }
+}
+function getCanBuyAmmount(prod) {
+    var prodName = getProductName(prod);
+    var cookies = Game.cookies;
+    var price = Game.Objects[prodName].getPrice();
+    return Math.floor(cookies / price);
+}
+var lastTargetName = "";
+var $lastClickedProduct;
 function clickDahUpgrade() {
     if (upgradePaused) return;
     if (buyUpgrades()) return;
     if (buyResearch()) return;
     clickaShimmer();
-
-    var lumpsAmount = Number.parseInt(_$("#lumpsAmount").innerHTML)
-    if (lumpsAmount) {
-        _$("#lumps").click()
-        console.log("Obtained lump.");
-    }
-
     Game.UpgradeSanta();
     Game.UpgradeDragon();
-    var prods = _$("#products").getElementsByClassName("unlocked");
-    var cookies = Game.cookies;
-    var cookiesPs = Game.cookiesPs + mousClicksPerSecond;
-    var $selectedProduct;
-    var timeNeeded = 0;
-    for ($prod of prods) {
-        var prodName = $prod.getElementsByClassName("title")[0].innerHTML;
-        if (prodName.includes("<span")) {
-            prodName = prodName.split(">")[1].split("<")[0];
+
+
+    var $worstProd = getWorstProduct();
+    var canBuy = getCanBuyAmmount($worstProd);
+    console.log(canBuy)
+    var $prod;
+    if (buyAllMode) {
+        $prod = getBestActiveProduct();
+        if (canBuy < 2) {
+            buyAllMode = false;
         }
+    } else {
+        if (canBuy > 150) {
+            buyAllMode = true;
+        }
+        $prod = getProductInWaitRange();
+    }
 
-        var price = Game.Objects[prodName].getPrice();
-        var cookiesNeeded = price - cookies;
-        timeNeeded = Math.floor(((cookiesNeeded / cookiesPs) * 1000));
 
-        if (!buyAllMode && timeNeeded > 0 && timeNeeded < buyAheadMaxTime) { //It's going to take to long for cookies for the next thing, 
-            // console.log("Target:" + timeNeeded + "Ms MouseCPS " + mousClicksPerSecond + "")
-            targetProductTimeNeeded = timeNeeded;
-            $targetProduct = $prod;
-            $selectedProduct = null;
-            break;
+    if ($prod) {
+        var prodName = getProductName($prod);
+        if ($prod.timeNeeded <= 0) {
+            $prod.click();
+            $lastClickedProduct = $prod;
+            lastTargetName = "";
+            console.log("Buying '" + prodName + "'.");
         } else {
-            var activeProds = _$("#products").getElementsByClassName("enabled");
-            if (activeProds && activeProds.length) { // buy it number of prods avail hits buyLength of buyable things.
-                $selectedProduct = activeProds[activeProds.length - 1]; //get to greatest product.
+            if (lastTargetName != prodName) {
+                lastTargetName = prodName;
+                console.log("Waiting for '" + prodName + "' in '" + Math.round($prod.timeNeeded / 1000) + " S'.");
             }
         }
     }
 
-    if ($selectedProduct) {
-        $targetProduct = null;
-        $selectedProduct.click();
-        $lastSelectedProduct = $selectedProduct;
-        var selectedProductName = $selectedProduct.getElementsByClassName("title")[0].innerHTML;
-        if (selectedProductName.includes("<span")) {
-            selectedProductName = selectedProductName.split(">")[1].split("<")[0];
-        }
-        console.log("Buying '" + selectedProductName + "'.");
+    resetProdBorders();
+    if ($lastClickedProduct) {
+        $lastClickedProduct.style = "border: 4px solid lime; margin: - 4px;";
     }
-
-    for ($prod of prods) {
-        $prod.style = "border: none;";
-    }
-
-    if ($lastSelectedProduct) {
-        $lastSelectedProduct.style = "border: 4px solid lime; margin: - 4px;";
-    }
-    if ($targetProduct) {
-        $targetProduct.style = "border: 5px solid aqua; margin: - 5px;";
+    if ($prod) {
+        $prod.style = "border: 5px solid aqua; margin: - 5px;";
     }
 
 }
 var lastBestProd;
 function updateBuyRate() {
     var prods = _$("#products").getElementsByClassName("unlocked");
-    var prodName = prods[prods.length - 1].getElementsByClassName("title")[0].innerHTML;
+    var prod = prods[prods.length - 1];
+    buyAheadMaxTime = getProductWaitForNextTime(prod);
+    if (lastBestProd != prod) {
+        var prodName = getProductName(prod);
+        console.log("Unlocked product '" + prodName + "'. Max wait time '" + (buyAheadMaxTime / 1000) + " S'");
+        lastBestProd = prod;
+    }
+}
+function getProductName(prod) {
+    var prodName = prod.getElementsByClassName("title")[0].innerHTML;
     if (prodName.includes("<span")) {
         prodName = prodName.split(">")[1].split("<")[0];
     }
+    return prodName;
+}
+function getProductWaitForNextTime(prod) {
+    var prodName = getProductName(prod);
     if (["Alchemy lab", "Portal", "Time machine", "Chancemaker", "Prism", "Chancemaker", "Fractal engine", "Javascript console"].includes(prodName)) {
-        buyAheadMaxTime = buyAheadBase;
+        return buyAheadBase;
     } else if (["Wizard tower", "Shipment"].includes(prodName)) {
-        buyAheadMaxTime = buyAheadBase / 1
+        return buyAheadBase / 1
     } else if (prodName == "Temple") {
-        buyAheadMaxTime = buyAheadBase / 2
+        return buyAheadBase / 2
     } else if (prodName == "Bank") {
-        buyAheadMaxTime = buyAheadBase / 3
+        return buyAheadBase / 3
     } else if (prodName == "Factory") {
-        buyAheadMaxTime = buyAheadBase / 4
+        return buyAheadBase / 4
     } else if (prodName == "Mine") {
-        buyAheadMaxTime = buyAheadBase / 5
+        return buyAheadBase / 5
     } else if (prodName == "Farm") {
-        buyAheadMaxTime = buyAheadBase / 6
+        return buyAheadBase / 6
     } else if (prodName == "Grandma") {
-        buyAheadMaxTime = buyAheadBase / 7;
+        return buyAheadBase / 7;
     }
-    if (lastBestProd != prodName) {
-        console.log("Unlocked product '" + prodName + "'. Max wait time '" + (buyAheadMaxTime / 1000) + " Ms'")
-        lastBestProd = prodName;
-    }
+}
+function playGardenGame() {
+    gardenTile
 }
 
 var clickCookieInterval;

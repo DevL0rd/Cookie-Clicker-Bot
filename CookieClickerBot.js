@@ -10,6 +10,25 @@ function multiplyBy(x, y, n) {
 };
 
 var _$ = $;
+var lastLog = "";
+var logCount = 0;
+function log(text) {
+    console.log(text);
+    if (lastLog == text) {
+        logCount++;
+        if (logCount < 2) {
+            _$("#bakeryName").innerHTML = text;
+        } else {
+            _$("#bakeryName").innerHTML = "(" + logCount + ") " + text;
+        }
+    } else {
+        _$("#bakeryName").innerHTML = text;
+        logCount = 0;
+    }
+    lastLog = text;
+}
+
+
 var mousClicksPerSecond = 0;
 var cpsTracker = 0;
 var cpsEnd = (new Date()).getTime() + 1000;
@@ -28,6 +47,7 @@ function clickDahCookie() {
     clickaShimmer();
 }
 
+
 var upgradePaused = false;
 var buyAllMode = false;
 
@@ -36,10 +56,7 @@ function buyUpgrades() {
     for (upgrd of upgrds) {
         upgrd.click();
         // _$("#promptOption0").click(); // check if there first
-        console.log("Purchased upgrade.");
-        if (_$("#promptAnchor").style.display == "block") {
-            _$("#promptOption0").click();
-        }
+        log("Purchased upgrade.");
         return true;
     }
 }
@@ -61,7 +78,10 @@ function buyResearch() {
     var tupgrds = _$("#techUpgrades").getElementsByClassName("enabled");
     for (tupgrd of tupgrds) {
         tupgrd.click();
-        console.log("Purchased research.");
+        log("Purchased research.");
+        if (_$("#promptAnchor").style.display == "block") {
+            _$("#promptOption0").click();
+        }
         return true;
     }
 }
@@ -69,16 +89,15 @@ function clickaShimmer() {
     if (_$(".shimmer")) {
         // if (!_$(".shimmer").style.backgroundImage.includes("wrath") && !_$(".shimmer").style.backgroundImage.includes("clot")) {
         _$(".shimmer").click();
-        _$("#seasonPopup").click();
         // }
-        console.log("Clicked shimmer.");
+        log("Clicked shimmer.");
     }
 }
 function clickFortune() {
     if (_$(".fortune")) {
         // if (!_$(".shimmer").style.backgroundImage.includes("wrath") && !_$(".shimmer").style.backgroundImage.includes("clot")) {
         _$(".fortune").click();
-        console.log("Clicked fortune.");
+        log("Clicked fortune.");
     }
 }
 function getTimeToBuyable(prod) {
@@ -145,7 +164,7 @@ function clickDahUpgrade() {
         if (!$prod) {
             buyAllMode = false;
             setTimeout(selectBestAuras, 50)
-            console.log("Resuming normal bot function.");
+            log("Resuming normal bot function.");
         } else {
             var canBuy = getCanBuyAmmount($prod)
             if (canBuy >= 100) {
@@ -161,7 +180,7 @@ function clickDahUpgrade() {
         var canBuy = getCanBuyAmmount($worstProd);
         if (canBuy > 200) {
             buyAllMode = true;
-            console.log("Buying up all products to even growth.");
+            log("Buying up all products to even growth.");
         }
         $prod = getProductInWaitRange();
 
@@ -174,11 +193,11 @@ function clickDahUpgrade() {
             $prod.click();
             $lastClickedProduct = $prod;
             lastTargetName = "";
-            console.log("Buying '" + prodName + "'.");
+            log("Buying '" + prodName + "'.");
         } else {
             if (lastTargetName != prodName) {
                 lastTargetName = prodName;
-                console.log("Waiting for '" + prodName + "' in '" + Math.round($prod.timeNeeded / 1000) + " S'.");
+                log("Waiting for '" + prodName + "' in '" + Math.round($prod.timeNeeded / 1000) + " S'.");
             }
         }
     }
@@ -198,7 +217,7 @@ function updateBuyRate() {
     var prod = prods[prods.length - 1];
     if (lastBestProd != prod) {
         var prodName = getProductName(prod);
-        console.log("Unlocked product '" + prodName + "'. Max wait time '" + (buyAheadMaxTime / 1000) + " S'");
+        log("Unlocked product '" + prodName + "'. Max wait time '" + (buyAheadMaxTime / 1000) + " S'");
         lastBestProd = prod;
         buyAheadMaxTime = getProductWaitForNextTime(prod);
     }
@@ -235,39 +254,39 @@ function getProductWaitForNextTime(prod) {
 // }
 function popWrinkler(ammount = 1) {
     while (ammount > 0) {
-        console.log("Popping wrinkler.")
+        log("Popping wrinkler.")
         Game.PopRandomWrinkler()
         ammount--;
     }
 }
 
 function selectBestAuras() {
-    console.log("Setting primary dragon aura.")
+    log("Setting primary dragon aura.")
     Game.SelectDragonAura(0)
     setTimeout(function () {
         var auras = _$("#promptContent").getElementsByClassName("crate")
         if (auras && auras.length) {
             auras[auras.length - 1].click()
-            console.log("Selected best aura.")
+            log("Selected best aura.")
             setTimeout(function () {
                 _$("#promptOption0").click()
-                console.log("Confirmed primary aura selection.")
+                log("Confirmed primary aura selection.")
                 if (auras.length - 1 > 17) {
-                    console.log("Setting secondary dragon aura.")
+                    log("Setting secondary dragon aura.")
                     Game.SelectDragonAura(1)
                     setTimeout(function () {
                         var auras = _$("#promptContent").getElementsByClassName("crate")
                         auras[auras.length - 2].click()
-                        console.log("Selected second best dragon aura.")
+                        log("Selected second best dragon aura.")
                         setTimeout(function () {
                             _$("#promptOption0").click()
-                            console.log("Confirmed secondary aura selection.")
+                            log("Confirmed secondary aura selection.")
                         }, 500)
                     }, 500)
                 }
             }, 500)
         } else {
-            console.log("No auras available yet.")
+            log("No auras available yet.")
             _$("#promptOption1").click()
         }
     }, 500)

@@ -35,6 +35,9 @@ function buyUpgrades() {
         upgrd.click();
         // _$("#promptOption0").click(); // check if there first
         console.log("Purchased upgrade.");
+        if (_$("#promptAnchor").style.display) {
+            _$("#promptOption0").click();
+        }
         return true;
     }
 }
@@ -245,7 +248,7 @@ function popDahWrinklers() {
 var popWrinklerInterval;
 var clickCookieInterval;
 var clickUpgradesInterval;
-function start() { clickCookieInterval = setInterval(clickDahCookie, 1); clickUpgradesInterval = setInterval(clickDahUpgrade, 10); popWrinklerInterval = setInterval(popDahWrinklers, 240000); return true; }
+function start() { clickCookieInterval = setInterval(clickDahCookie, 1); clickUpgradesInterval = setInterval(clickDahUpgrade, 3); popWrinklerInterval = setInterval(popDahWrinklers, 240000); return true; }
 function stop() { clearInterval(clickCookieInterval); clearInterval(clickUpgradesInterval); clearInterval(popWrinklerInterval); return true; }
 stop();
 start();

@@ -22,6 +22,7 @@ function clickDahCookie() {
         mousClicksPerSecond = cpsTracker;
         cpsTracker = 0;
         updateBuyRate();
+        setMouseHover();
     }
     clickaShimmer();
 }
@@ -39,6 +40,20 @@ function buyUpgrades() {
             _$("#promptOption0").click();
         }
         return true;
+    }
+}
+var wrinklerHover = 0;
+function setMouseHover() {
+    if (Game.wrinklers[wrinklerHover].sucked) {
+        Game.mouseX = Game.wrinklers[wrinklerHover].x
+        Game.mouseY = Game.wrinklers[wrinklerHover].y
+    } else {
+        Game.mouseX = -50
+        Game.mouseY = -50
+    }
+    wrinklerHover++;
+    if (wrinklerHover > 11) {
+        wrinklerHover = 0
     }
 }
 function buyResearch() {

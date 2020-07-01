@@ -22,10 +22,10 @@ function clickDahCookie() {
         mousClicksPerSecond = cpsTracker;
         cpsTracker = 0;
         updateBuyRate();
+        clickFotune();
         setMouseHover();
     }
     clickaShimmer();
-    clickFotune();
 }
 
 var upgradePaused = false;

@@ -200,11 +200,13 @@ function getProductWaitForNextTime(prod) {
 // }
 function popWrinkler(ammount = 1) {
     while (ammount > 0) {
+        console.log("Popping wrinkler.")
         Game.PopRandomWrinkler()
         ammount--;
     }
 }
 function popDahWrinklers() {
+
     popWrinkler(3)
 }
 var popWrinklerInterval;

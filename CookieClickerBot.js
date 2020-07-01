@@ -22,7 +22,6 @@ function clickDahCookie() {
         mousClicksPerSecond = cpsTracker;
         cpsTracker = 0;
         updateBuyRate();
-        Game.PopRandomWrinkler();
     }
 }
 
@@ -196,14 +195,14 @@ function getProductWaitForNextTime(prod) {
         return buyAheadBase / 7;
     }
 }
-function playGardenGame() {
-    gardenTile
-}
-
+// function playGardenGame() {
+//     gardenTile
+// }
+var popWrinklerInterval;
 var clickCookieInterval;
 var clickUpgradesInterval;
-function start() { clickCookieInterval = setInterval(clickDahCookie, 1); clickUpgradesInterval = setInterval(clickDahUpgrade, 10); return true; }
-function stop() { clearInterval(clickCookieInterval); clearInterval(clickUpgradesInterval); return true; }
+function start() { clickCookieInterval = setInterval(clickDahCookie, 1); clickUpgradesInterval = setInterval(clickDahUpgrade, 10); popWrinklerInterval = setInterval(Game.PopRandomWrinkler, 60000); return true; }
+function stop() { clearInterval(clickCookieInterval); clearInterval(clickUpgradesInterval); clearInterval(popWrinklerInterval); return true; }
 stop();
 start();
 

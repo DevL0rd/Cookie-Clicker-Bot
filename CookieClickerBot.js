@@ -229,7 +229,7 @@ function selectBestAuras() {
     Game.SelectDragonAura(0)
     setTimeout(function () {
         var auras = _$("#promptContent").getElementsByClassName("crate")
-        if (auras) {
+        if (auras && auras.length) {
             auras[auras.length - 1].click()
             console.log("Selected best aura.")
             setTimeout(function () {
@@ -251,7 +251,7 @@ function selectBestAuras() {
             }, 500)
         } else {
             console.log("No auras available yet.")
-            _$("#promptOption0").click()
+            _$("#promptOption1").click()
         }
     }, 500)
 

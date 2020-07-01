@@ -62,18 +62,24 @@ function buyUpgrades() {
 }
 var wrinklerHover = 0;
 function setMouseHover() {
-    if (Game.wrinklers[wrinklerHover].sucked) {
-        Game.mouseX = Game.wrinklers[wrinklerHover].x
-        Game.mouseY = Game.wrinklers[wrinklerHover].y
-    } else {
-        Game.mouseX = -50
-        Game.mouseY = -50
-    }
-    wrinklerHover++;
-    if (wrinklerHover > 11) {
-        wrinklerHover = 0
+    var foundWrinkler = false;
+    while (!foundWrinkler) {
+        if (Game.wrinklers[wrinklerHover].sucked) {
+            foundWrinkler = true;
+            Game.mouseX = Game.wrinklers[wrinklerHover].x
+            Game.mouseY = Game.wrinklers[wrinklerHover].y
+        } else {
+            Game.mouseX = -50
+            Game.mouseY = -50
+        }
+        wrinklerHover++;
+        if (wrinklerHover > 11) {
+            if (!foundWrinkler) foundWrinkler = true;
+            wrinklerHover = 0
+        }
     }
 }
+
 function buyResearch() {
     var tupgrds = _$("#techUpgrades").getElementsByClassName("enabled");
     for (tupgrd of tupgrds) {
@@ -294,7 +300,6 @@ function selectBestAuras() {
 }
 function popDahWrinklers() {
     popWrinkler(2)
-    var auras = _$("#promptContent").getElementsByClassName("crate").length - 1
 }
 var popWrinklerInterval;
 var clickCookieInterval;

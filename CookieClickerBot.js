@@ -206,8 +206,7 @@ function popWrinkler(ammount = 1) {
     }
 }
 function popDahWrinklers() {
-
-    popWrinkler(3)
+    popWrinkler(2)
 }
 var popWrinklerInterval;
 var clickCookieInterval;

@@ -146,8 +146,18 @@ function clickDahUpgrade() {
             buyAllMode = false;
             setTimeout(selectBestAuras, 50)
             console.log("Resuming normal bot function.");
+        } else {
+            var canBuy = getCanBuyAmmount($prod)
+            if (canBuy >= 100) {
+                _$("#storeBulk100").click()
+            } else if (canBuy >= 10) {
+                _$("#storeBulk10").click()
+            } else {
+                _$("#storeBulk1").click()
+            }
         }
     } else {
+        _$("#storeBulk1").click()
         var canBuy = getCanBuyAmmount($worstProd);
         if (canBuy > 200) {
             buyAllMode = true;

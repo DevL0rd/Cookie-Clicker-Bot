@@ -113,13 +113,14 @@ function clickDahUpgrade() {
     Game.UpgradeSanta();
     Game.UpgradeDragon();
 
-
     var $worstProd = getWorstProduct();
     var $prod;
     if (buyAllMode) {
         $prod = getBestActiveProduct();
         if (!$prod) {
             buyAllMode = false;
+            console.log("Selecting best dragon auras.");
+            selectBestAuras();
             console.log("Resuming normal bot function.");
         }
     } else {
@@ -205,13 +206,47 @@ function popWrinkler(ammount = 1) {
         ammount--;
     }
 }
+
+function selectBestAuras() {
+    console.log("Setting primary dragon aura.")
+    Game.SelectDragonAura(0)
+    setTimeout(function () {
+        var auras = _$("#promptContent").getElementsByClassName("crate")
+        if (auras) {
+            auras[auras.length - 1].click()
+            console.log("Selected best aura.")
+            setTimeout(function () {
+                _$("#promptOption0").click()
+                console.log("Confirmed primary aura selection.")
+                if (auras.length - 1 > 17) {
+                    console.log("Setting secondary dragon aura.")
+                    Game.SelectDragonAura(1)
+                    setTimeout(function () {
+                        var auras = _$("#promptContent").getElementsByClassName("crate")
+                        auras[auras.length - 2].click()
+                        console.log("Selected second best dragon aura.")
+                        setTimeout(function () {
+                            _$("#promptOption0").click()
+                            console.log("Confirmed secondary aura selection.")
+                        }, 500)
+                    }, 500)
+                }
+            }, 500)
+        } else {
+            console.log("No auras available yet.")
+            _$("#promptOption0").click()
+        }
+    }, 500)
+
+}
 function popDahWrinklers() {
     popWrinkler(2)
+    var auras = _$("#promptContent").getElementsByClassName("crate").length - 1
 }
 var popWrinklerInterval;
 var clickCookieInterval;
 var clickUpgradesInterval;
-function start() { clickCookieInterval = setInterval(clickDahCookie, 1); clickUpgradesInterval = setInterval(clickDahUpgrade, 10); popWrinklerInterval = setInterval(popDahWrinklers, 60000); return true; }
+function start() { clickCookieInterval = setInterval(clickDahCookie, 1); clickUpgradesInterval = setInterval(clickDahUpgrade, 10); popWrinklerInterval = setInterval(popDahWrinklers, 240000); return true; }
 function stop() { clearInterval(clickCookieInterval); clearInterval(clickUpgradesInterval); clearInterval(popWrinklerInterval); return true; }
 stop();
 start();

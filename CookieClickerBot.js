@@ -22,7 +22,7 @@ function clickDahCookie() {
         mousClicksPerSecond = cpsTracker;
         cpsTracker = 0;
         updateBuyRate();
-        clickFotune();
+        clickFortune();
         setMouseHover();
     }
     clickaShimmer();
@@ -74,7 +74,7 @@ function clickaShimmer() {
         console.log("Clicked shimmer.");
     }
 }
-function clickFotune() {
+function clickFortune() {
     if (_$(".fortune")) {
         // if (!_$(".shimmer").style.backgroundImage.includes("wrath") && !_$(".shimmer").style.backgroundImage.includes("clot")) {
         _$(".fortune").click();

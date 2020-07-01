@@ -119,8 +119,7 @@ function clickDahUpgrade() {
         $prod = getBestActiveProduct();
         if (!$prod) {
             buyAllMode = false;
-            console.log("Selecting best dragon auras.");
-            selectBestAuras();
+            setTimeout(selectBestAuras, 50)
             console.log("Resuming normal bot function.");
         }
     } else {

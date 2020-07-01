@@ -25,6 +25,7 @@ function clickDahCookie() {
         setMouseHover();
     }
     clickaShimmer();
+    clickFotune();
 }
 
 var upgradePaused = false;
@@ -73,7 +74,13 @@ function clickaShimmer() {
         console.log("Clicked shimmer.");
     }
 }
-
+function clickFotune() {
+    if (_$(".fortune")) {
+        // if (!_$(".shimmer").style.backgroundImage.includes("wrath") && !_$(".shimmer").style.backgroundImage.includes("clot")) {
+        _$(".fortune").click();
+        console.log("Clicked fortune.");
+    }
+}
 function getTimeToBuyable(prod) {
     var prodName = getProductName(prod);
     var cookies = Game.cookies;

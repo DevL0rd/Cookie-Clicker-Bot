@@ -198,25 +198,31 @@ function getProductWaitForNextTime(prod) {
 // function playGardenGame() {
 //     gardenTile
 // }
+function popWrinkler(ammount = 1) {
+    while (ammount > 0) {
+        Game.PopRandomWrinkler()
+        ammount--;
+    }
+}
+function popDahWrinklers() {
+    popWrinkler(3)
+}
 var popWrinklerInterval;
 var clickCookieInterval;
 var clickUpgradesInterval;
-function start() { clickCookieInterval = setInterval(clickDahCookie, 1); clickUpgradesInterval = setInterval(clickDahUpgrade, 10); popWrinklerInterval = setInterval(Game.PopRandomWrinkler, 60000); return true; }
+function start() { clickCookieInterval = setInterval(clickDahCookie, 1); clickUpgradesInterval = setInterval(clickDahUpgrade, 10); popWrinklerInterval = setInterval(popDahWrinklers, 60000); return true; }
 function stop() { clearInterval(clickCookieInterval); clearInterval(clickUpgradesInterval); clearInterval(popWrinklerInterval); return true; }
 stop();
 start();
 
 //utils
 
-function spawnShimmer(ammount = 1) {
+function boost(ammount = 1) {
     while (ammount > 0) {
         var newShimmer = new Game.shimmer("golden");
         newShimmer.spawnLead = 1;
         ammount--;
     }
-}
-function boost() { // debugging tool
-    spawnShimmer(2);
 }
 function pauseUpgrades() {
     if (upgradePaused) {
@@ -234,4 +240,3 @@ function buyAll() {
     }
     return buyAllMode;
 }
-

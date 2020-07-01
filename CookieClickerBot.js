@@ -35,7 +35,7 @@ function buyUpgrades() {
         upgrd.click();
         // _$("#promptOption0").click(); // check if there first
         console.log("Purchased upgrade.");
-        if (_$("#promptAnchor").style.display) {
+        if (_$("#promptAnchor").style.display == "block") {
             _$("#promptOption0").click();
         }
         return true;

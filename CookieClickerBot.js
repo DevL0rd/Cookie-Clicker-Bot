@@ -23,6 +23,7 @@ function clickDahCookie() {
         cpsTracker = 0;
         updateBuyRate();
     }
+    clickaShimmer();
 }
 
 var upgradePaused = false;
@@ -109,7 +110,6 @@ function clickDahUpgrade() {
     if (upgradePaused) return;
     if (buyUpgrades()) return;
     if (buyResearch()) return;
-    clickaShimmer();
     Game.UpgradeSanta();
     Game.UpgradeDragon();
 

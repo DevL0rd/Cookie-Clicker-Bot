@@ -233,11 +233,12 @@ function getProductName(prod) {
     if (prodName.includes("<span")) {
         prodName = prodName.split(">")[1].split("<")[0];
     }
+    if (prodName == "Antim. condenser") prodName = "Antimatter condenser"
     return prodName;
 }
 function getProductWaitForNextTime(prod) {
     var prodName = getProductName(prod);
-    if (["Alchemy lab", "Portal", "Time machine", "Chancemaker", "Prism", "Chancemaker", "Fractal engine", "Javascript console"].includes(prodName)) {
+    if (["Alchemy lab", "Portal", "Time machine", "Chancemaker", "Prism", "Chancemaker", "Fractal engine", "Javascript console", "Idleverse"].includes(prodName)) {
         return buyAheadBase;
     } else if (["Wizard tower", "Shipment"].includes(prodName)) {
         return buyAheadBase / 1
@@ -254,6 +255,7 @@ function getProductWaitForNextTime(prod) {
     } else if (prodName == "Grandma") {
         return buyAheadBase / 7;
     }
+    
 }
 // function playGardenGame() {
 //     gardenTile
